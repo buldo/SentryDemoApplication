@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Demo.Pages
 {
@@ -30,6 +33,23 @@ namespace Demo.Pages
         public void OnPostCreateException()
         {
             throw new ArgumentOutOfRangeException("testArg", "Wtf with arg");
+        }
+
+        public void OnPostLog4NetError()
+        {
+            LogManager.GetLogger(typeof(IndexModel)).Error("Какая-то ошибка произошла Log4Net");
+        }
+
+        public void OnPostCreateExceptionLog4Net()
+        {
+            try
+            {
+                throw new ArgumentOutOfRangeException("testArg", "Wtf with arg");
+            }
+            catch (Exception e)
+            {
+                LogManager.GetLogger(typeof(IndexModel)).Error("Произошло исключение", e);
+            }
         }
     }
 }
